@@ -2,34 +2,34 @@
 * Устанавливаем Ubuntu 20.04 Server LTS без графического интерфейса. Для виртуализации используется команда VirtualBox.
 * Проверяем версию системы командой `cat /etc/issue`:
 
-![ubuntu version](/src/images/part1.1.png "Версия системы")
+![ubuntu version](/images/part1.1.png "Версия системы")
 
 ## Part 2. Создание пользователя
 
 * Создадим нового пользователя командой `sudo adduser (username)`:
 
-![create new user](/src/images/part2.1.png "Добавление нового пользователя")
+![create new user](/images/part2.1.png "Добавление нового пользователя")
 
 * Добавим его в группу adm командой `sudo usermod -aG (groupname) (username)`. Перейдем на нового пользователя командой `su (username)` и проверим, что он находится в группе командой `groups`:
 
-![add to adm](/src/images/part2.2.png "Добавление пользователя в группу adm")
+![add to adm](/images/part2.2.png "Добавление пользователя в группу adm")
 
 * Вывод команды `cat /etc/passwd` с новым пользователем: 
 
-![new user](/src/images/part2.3.png "Новый пользователь")
+![new user](/images/part2.3.png "Новый пользователь")
 
 ## Part 3. Настройка сети ОС
 * Изменим название машины на user-1 командой `sudo hostname (hostname)`, а также поменяем файл /etc/hostname командой `nano /etc/hostname`:
 
-![new hostname](/src/images/part3.1.png "Новое имя машины")
+![new hostname](/images/part3.1.png "Новое имя машины")
 
 * Изменим временную зону на зону, соответствующую Москве командой `sudo timedatectl set-timezone (timezone)`. Проверим временную зону командой `timedatectl`: 
 
-![new timezone](/src/images/part3.2.png "Изменение временной зоны")
+![new timezone](/images/part3.2.png "Изменение временной зоны")
 
 * Для того, чтобы вывести сетевые интерфейсы воспользуемся командой `ip link`:
 
-![ip link](/src/images/part3.3.png "Сетевые интерфейсы")
+![ip link](/images/part3.3.png "Сетевые интерфейсы")
 > **Loopback** - канал коммуникации с одной конечной точкой. Любые сообщения, посылаемые на этот канал, немедленно принимаются тем же самым каналом. Любые сообщения, которые отправляются с этого интерфейса, но у которых адрес не Loopback Interface, отбрасываются. В компьютерах таким адресом loopback interface является адрес 127.0.0.1, он фиксированный и изменению не подлежит. На Unix-like системах loopback interface называется lo или lo0.
 
 * Для работы с DHCP  (Dynamic Host Configuration Protocol) используем инструмент dhclient.
@@ -37,15 +37,15 @@
 
 * Сначала сбросим существующий IP-адрес командой `sudo dhclient -r enp0s3`. Затем получим IP-адрес командой `sudo dhclient -v enp0s3`. Чтобы опеределить текущий IP-адрес устройства используем команду `ip a`. IP-адрес выводится на строке inet: 10.0.2.15.
 
-![ip-adress](/src/images/part3.4.png "IP-адрес")
+![ip-adress](/images/part3.4.png "IP-адрес")
 
 * Чтобы узнать внешний IP-адрес воспользуемся командой `curl ident.me`:
 
-![ident.me](/src/images/part3.5.png "Внешний IP-адрес")
+![ident.me](/images/part3.5.png "Внешний IP-адрес")
 
 * Чтобы получить IP-адрес по умолчанию используем команду `ip route | grep default`:
 
-![default ip](/src/images/part3.6.png "Внешний IP-адрес")
+![default ip](/images/part3.6.png "Внешний IP-адрес")
 
 > **Внутренний (локальный) IP** — это IP-адрес, который выдается компьютеру в пределах внутренней локальной сети. Такой адрес не используется для выхода в сеть.
 > **Внешний IP-адрес** вы получаете от вашего провайдера. Он может быть статическим и динамическим (меняется каждый раз когда вы подключаетесь к сети).
@@ -54,33 +54,33 @@
 
 * Установим значение «dhcp4» на "false", чтобы отключить протокол DHCP. Зададим статичные настройки  ip, gw, dns:
 
-![static settings](/src/images/part3.7.png "Статичные настройки")
+![static settings](/images/part3.7.png "Статичные настройки")
 
 * Применяем настройки командой `sudo netplan apply`. Убеедимся, что настройки применились используя команду `ip a`:
 
-![check settings](/src/images/part3.8.png "Проверка настроек")
+![check settings](/images/part3.8.png "Проверка настроек")
 
 * Хосты 1.1.1.1 и ya.ru пропингованы успешно: 
-![ping hosts](/src/images/part3.9.png "Пинг хостов 1.1.1.1 и ya.ru")
+![ping hosts](/images/part3.9.png "Пинг хостов 1.1.1.1 и ya.ru")
 
 ## Part 4. Обновление ОС
 * Для обновления выполняем команды `sudo apt-get update` и `sudo apt-get upgrade`. При повторном вызове команд видим, что обнвления отсутствуют: 
 
-![OC update](/src/images/part4.1.png "Обновление системы")
+![OC update](/images/part4.1.png "Обновление системы")
 
 ## Part 5. Использование команды sudo
 * Для того, чтобы разрешить новому пользователю выполнять команду sudo добавим его в группу sudo. Перейдем на нового пользователя и поменяем имя hostname. Также изменим содержимое файла /etc/hostname командой `sudo nano /etc/hostname`. После этого перезапускаем систему командой `sudo reboot`.
 
 > Утилита **sudo** позволяет выполнить команду с правами администратора системы.
 
-![add new user to sudo](/src/images/part5.1.png "Добавление нового пользователя в группу sudo. Изменение hostname")
-![new hostname](/src/images/part5.2.png "Новое имя машины")
+![add new user to sudo](/images/part5.1.png "Добавление нового пользователя в группу sudo. Изменение hostname")
+![new hostname](/images/part5.2.png "Новое имя машины")
 
 ## Part 6. Установка и настройка службы времени
 > Синхронизация времени производится посредством специального протокола передачи данных – **NTP (Network Time Protocol)**.
 * В нашем случае синхронизация уже включена: 
 
-![ntp](/src/images/part6.1.png "Установка и настройка службы времени")
+![ntp](/images/part6.1.png "Установка и настройка службы времени")
 
 * Если сервис выключен, включить его можно командой `sudo timedatectl set-ntp on`
 
@@ -89,13 +89,13 @@
 * Создадим файл test_vim.txt командой `vim test_vim.txt`
 * Для редактирования файла с текущей позиции нажимаем i. Вводим текст.
 
-![vim1](/src/images/part7.1.png "Содержимое файла перед закрытием")
+![vim1](/images/part7.1.png "Содержимое файла перед закрытием")
 
 * Чтобы записать файлл и выйти нажимаем esc, :wq.
 
 * Откроем файл на редактирование командой `vim test_vim.txt`. Для редактирования с конца строки нажимаем А. Меняем текст:
 
-![vim2](/src/images/part7.2.png "Редактирование файла")
+![vim2](/images/part7.2.png "Редактирование файла")
 
 * Выйдем из файла без сохранения: esc -> :q!
 
@@ -103,53 +103,53 @@
 
 * Команда для замены `:[range]s/{pattern}/{string}/[flags] [count]`. Чтобы найти и заменить шаблон во всем файле, используем процентный символ % в качестве диапазона. Этот символ указывает диапазон от первой до последней строки файла. `:%s/shaquitt/21 Schhol 21`:
 
-![vim3](/src/images/part7.3.png "Первоначальный текст")
+![vim3](/images/part7.3.png "Первоначальный текст")
 
-![vim4](/src/images/part7.4.png "Текст после замены")
+![vim4](/images/part7.4.png "Текст после замены")
 
 ## NANO
 * Создадим файл test_nano.txt командой `nano test_nano.txt`
 * Редактируем файл. Для сохранения нажимаем ^X -> y -> enter.
 
-![nano1](/src/images/part7.5.png "Содержимое файла перед закрытием")
+![nano1](/images/part7.5.png "Содержимое файла перед закрытием")
 
 * Откроем файл на редактирование командой `nano test_nano.txt`. Меняем текст. Выходим из файла без сохранения ^X -> n.
 
-![nano2](/src/images/part7.6.png "Редактирование файла")
+![nano2](/images/part7.6.png "Редактирование файла")
 
 * Еще раз откроем файл на редактирование командой `nano test_nano.txt`. Для поиска используем комбинацию клавиш ^W и вводим искомое слово. Найдено одно совпадение: 
 
-![nano3](/src/images/part7.7.png "Поиск")
+![nano3](/images/part7.7.png "Поиск")
 
 * Для замены шаблона используем ^\, вводим слово, которое хотим заменить, а затем слово на которое хотим заменить. Для замены всех слов нажимаем А. 
 
-![nano4](/src/images/part7.8.png "Замена")
+![nano4](/images/part7.8.png "Замена")
 
 ## JOE 
 * Устанавливаем joe командой `sudo apt install joe`:
 
-![joe1](/src/images/part7.9.png "Установка joe")
+![joe1](/images/part7.9.png "Установка joe")
 
 * Создадим файл test_joe.txt командой `joe test_joe.txt`. Для выхода с сохранением испольуем ^K и Х.
 
-![joe2](/src/images/part7.10.png "Содержимое файла перед закрытием")
+![joe2](/images/part7.10.png "Содержимое файла перед закрытием")
 
 * Откроем файл на редактирование командой `joe test_joe.txt`. Меняем текст. Выходим из файла без сохранения ^С -> y.
 
-![joe3](/src/images/part7.11.png "Редактирование файла")
+![joe3](/images/part7.11.png "Редактирование файла")
 
 
-![joe4](/src/images/part7.12.png "Выход без сохранения")
+![joe4](/images/part7.12.png "Выход без сохранения")
 
 * Еще раз откроем файл на редактирование командой `joe test_joe.txt`. Для поиска используем комбинацию клавиш ^KF и вводим искомое слово. 
 
-![joe4](/src/images/part7.13.png "Поиск")
+![joe4](/images/part7.13.png "Поиск")
 
 * Для замены найденных слов нажимаем R и вводим слово на которое хотим заменить: 
 
-![joe5](/src/images/part7.14.png "Замена")
+![joe5](/images/part7.14.png "Замена")
 
-![joe6](/src/images/part7.15.png "Новое слово")
+![joe6](/images/part7.15.png "Новое слово")
 
 ## Part 8. Установка и базовая настройка сервиса SSHD
 > **SSH (Secure Shell)** — сетевой протокол прикладного уровня, позволяющий производить удалённое управление операционной системой и туннелирование TCP-соединений (например, для передачи файлов). Шифрует весь трафик, включая и передаваемые пароли. 
@@ -158,13 +158,13 @@
 
 Настройки демона хранятся в файле /etc/ssh/sshd_config. Открываем его командой `sudo nano /etc/ssh/sshd_config`. Меняем порт на 2022 и раскоментируем строку:
 
-![sshd_config](/src/images/part8.1.png "Изменение порта")
+![sshd_config](/images/part8.1.png "Изменение порта")
 
 Сохраняем файл и перезапускаем сервис командой `sudo service sshd restart`.
 
 `ps -A | grep "ssh"` выведет все процессы с вхождениями ssh: 
 
-![ps](/src/images/part8.2.png "Наличие процееса sshd")
+![ps](/images/part8.2.png "Наличие процееса sshd")
 
 > Команда ps выводит список текущих процессов на вашем сервере в виде таблицы, с которой можно удобно работать: сортировать, изменять количество колонок и др.
 >> * **-A, -e, (a)** - выбрать все процессы;
@@ -181,7 +181,7 @@
 
 *  Вывод команды `netstat -tan`: 
 
-![netstat -tan](/src/images/part8.3.png "Вывод команды netstat -tan")
+![netstat -tan](/images/part8.3.png "Вывод команды netstat -tan")
 
 > Команда netstat показывает содержимое различных структур данных, связанных с активными сетевыми соединениями. 
 >> * **-t** - TCP порты
@@ -202,7 +202,7 @@
 
 * Вывод команды top:
 
-![top](/src/images/part9.1.png "Вывод команды top")
+![top](/images/part9.1.png "Вывод команды top")
 
 * uptime = 2.36 (2 часа 36 минут);
 * Количество авторизованных пользователей = 1;
@@ -222,11 +222,11 @@
 * Pid процесса, занимающего больше всего памяти = 675;
 > Чтобы выполнить в top сортировку по памяти (%MEM), достаточно ввести Shift+M.
 
-![most mem](/src/images/part9.2.png "Процесс, занимающий больше всего памяти")
+![most mem](/images/part9.2.png "Процесс, занимающий больше всего памяти")
 * Pid процесса, занимающего больше всего процессорного времени = 563;
 > Изначальная сортировка при открытии top показывает сначала процессы, занимающие больше всего процессорного времени.
 
-![most time](/src/images/part9.3.png "Процесс, занимающий больше всего процессорного времени")
+![most time](/images/part9.3.png "Процесс, занимающий больше всего процессорного времени")
 
 * Для выхода из top используем q.
 
@@ -234,36 +234,36 @@
 * Для сортировки нажимаем fn+F6 и выбираем нужный столбец.
 * Сортировка по PID: 
 
-![pid sort](/src/images/part9.4.png "Сортировка по PID")
+![pid sort](/images/part9.4.png "Сортировка по PID")
 
 * Сортировка по PERCENT_CPU: 
 
-![PERCENT_CPU sort](/src/images/part9.5.png "Сортировка по PERCENT_CPU")
+![PERCENT_CPU sort](/images/part9.5.png "Сортировка по PERCENT_CPU")
 
 * Сортировка по PERCENT_MEM: 
 
-![PERCENT_MEM sort](/src/images/part9.6.png "Сортировка по PERCENT_MEM")
+![PERCENT_MEM sort](/images/part9.6.png "Сортировка по PERCENT_MEM")
 
 * Сортировка по TIME: 
 
-![TIME sort](/src/images/part9.7.png "Сортировка по TIME")
+![TIME sort](/images/part9.7.png "Сортировка по TIME")
 
 * Отфильтрованные по "sshd" (F4):
 
-![sshd filter](/src/images/part9.8.png "Отфильтрованные по sshd")
+![sshd filter](/images/part9.8.png "Отфильтрованные по sshd")
 
 * C процессом syslog, найденным, используя поиск (F3):
 
-![syslog](/src/images/part9.9.png "C процессом syslog")
+![syslog](/images/part9.9.png "C процессом syslog")
 
 * C добавленным выводом hostname, clock и uptime:
 
-![hostname, clock, uptime](/src/images/part9.10.png "C C добавленным выводом hostname, clock и uptime")
+![hostname, clock, uptime](/images/part9.10.png "C C добавленным выводом hostname, clock и uptime")
 
 ## Part 10. Использование утилиты fdisk
 * Используем команду `sudo fdisk -l`:
 
-![fdisk](/src/images/part10.1.png "Использование утилиты fdisk")
+![fdisk](/images/part10.1.png "Использование утилиты fdisk")
 
 * Название жесткого диска - /dev/sda;
 * Размер - 8 Gb;
@@ -273,7 +273,7 @@
 ## Part 11. Использование утилиты df
 * Запустим команду `df`:
 
-![df](/src/images/part11.1.png "df")
+![df](/images/part11.1.png "df")
 
 * Для корневого раздела: 
 1. Размер = 6352332 КB (килобайты);
@@ -283,7 +283,7 @@
 
 * Запустим команду `df -Th`:
 
-![df -Th](/src/images/part11.2.png "df -Th")
+![df -Th](/images/part11.2.png "df -Th")
 
 * Для корневого раздела: 
 1. Размер = 6,1 G;
@@ -307,28 +307,28 @@
 
 * Размер папок /home, /var, /var/log в байтах: 
 
-![size in bytes](/src/images/part12.1.png "Размер папок в байтах")
+![size in bytes](/images/part12.1.png "Размер папок в байтах")
 
 * Размер папок /home, /var, /var/log в человекочитаемом виде: 
 
-![human readable size](/src/images/part12.2.png "Размер папок с указанием единиц измерения")
+![human readable size](/images/part12.2.png "Размер папок с указанием единиц измерения")
 
 * Чтобы вывести размер всего содержимого папки /var/log используем команду `sudo du -h /var/log/*`:
 
-![var/log/* size](/src/images/part12.3.png "Размер содержимого папки /var/log")
+![var/log/* size](/images/part12.3.png "Размер содержимого папки /var/log")
 
 ## Part 13. Установка и использование утилиты ncdu
 * Устанавливаем утилиту командой `sudo apt install ncdu`:
 
-![install ncdu](/src/images/part13.1.png "Установка ncdu")
+![install ncdu](/images/part13.1.png "Установка ncdu")
 
 * Размер папок /home, /var: 
 
-![size /home, /var](/src/images/part13.2.png "Размер папок /home, /var")
+![size /home, /var](/images/part13.2.png "Размер папок /home, /var")
 
 * Размер папки /var/log: 
 
-![size /var/log](/src/images/part13.3.png "Размер папки /var/log")
+![size /var/log](/images/part13.3.png "Размер папки /var/log")
 
 ## Part 14. Работа с системными журналами
 > **/var/log/syslog или /var/log/messages** содержит глобальный системный журнал, в котором пишутся сообщения с момента запуска системы, от ядра Linux, различных служб, обнаруженных устройствах, сетевых интерфейсов и много другого.
@@ -341,11 +341,11 @@
 * Время последней авторизации: 11:24:47;
 * Имя пользователя new_user.
 
-![auth info](/src/images/part14.1.png "Информация об авторизациях")
+![auth info](/images/part14.1.png "Информация об авторизациях")
 
 * Перезапустим службу sshd командой `sudo service sshd restart`. Записи в журнале /var/log/syslog:
 
-![syslog](/src/images/part14.2.png "syslog")
+![syslog](/images/part14.2.png "syslog")
 
 ## Part 15. Использование планировщика заданий CRON
 > **CRON** - это программа-демон. Её основная задача выполнять указанные пользователем процессы в указанное пользователем время, например с определённой периодичностью.
@@ -354,15 +354,15 @@
 
 * Создадим файл расписания для текущего пользователя командой `crontab -e` -> 5(nano) и вписываем команду `*/2 * * * * uptime'. Она будет вызывть команду uptime каждые две минуты:
 
-![cron uptime](/src/images/part15.1.png "Запуск uptime с помощью CRON")
+![cron uptime](/images/part15.1.png "Запуск uptime с помощью CRON")
 
 * Журнал с записями о выполнении команд:
-![cron syslog](/src/images/part15.2.png "Журнал с записями о выполнении команд")
+![cron syslog](/images/part15.2.png "Журнал с записями о выполнении команд")
 
 * Список текущих заданий CRON `crontab -l`:
 
-![crontab -l](/src/images/part15.3.png "Список текущих заданий CRON")
+![crontab -l](/images/part15.3.png "Список текущих заданий CRON")
 
 * Список текущих заданий CRON после удаления `crontab -r`:
 
-![crontab -l after del](/src/images/part15.4.png "Список текущих заданий CRON после удаления")
+![crontab -l after del](/images/part15.4.png "Список текущих заданий CRON после удаления")
